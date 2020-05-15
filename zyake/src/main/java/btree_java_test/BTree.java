@@ -289,7 +289,6 @@ public class BTree<Key extends Comparable<Key>, Value>  {
         st.put(1, "128.112.136.12");
         st.put(2, "128.112.136.11");
         st.put(3,    "128.112.128.15");
-        st.put(9,         "130.132.143.21");
         final PrintStream StdOut = System.out;
 
         StdOut.println("size:    " + st.size());
@@ -305,25 +304,19 @@ public class BTree<Key extends Comparable<Key>, Value>  {
         StdOut.println();
 
         st.put(5,     "209.052.165.60");
-        
-        StdOut.println("size:    " + st.size());
-        StdOut.println("height:  " + st.height());
-        StdOut.println(st);
-        StdOut.println();
-
         st.put(6,     "209.052.165.60");
+        st.put(7,     "209.052.165.60");
+        st.put(8,     "209.052.165.60");
+        st.put(9,     "209.052.165.60");
+        st.put(10,     "209.052.165.60");
+
         
         StdOut.println("size:    " + st.size());
         StdOut.println("height:  " + st.height());
         StdOut.println(st);
         StdOut.println();
 
-        st.put(7,     "209.052.165.60");
-        
-        StdOut.println("size:    " + st.size());
-        StdOut.println("height:  " + st.height());
-        StdOut.println(st);
-        StdOut.println();
+
     }
 
 }
