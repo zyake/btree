@@ -48,7 +48,7 @@ public class BTree<Key extends Comparable<Key>, Value>  {
 
         @Override
         public String toString() {
-            return String.format("[numberOfChildren=%d, children=%s]", numberOfChildren, Arrays.toString(children));
+            return String.format("node[numberOfChildren=%d, children=%s]", numberOfChildren, Arrays.toString(children));
         }
     }
 
@@ -66,7 +66,7 @@ public class BTree<Key extends Comparable<Key>, Value>  {
 
         @Override
         public String toString() {
-            return String.format("[key=%s, value=%s, next=%s]", key, val, next);
+            return String.format("entry[key=%s, value=%s, next=%s]", key, val, next);
         }
     }
 
@@ -162,7 +162,7 @@ public class BTree<Key extends Comparable<Key>, Value>  {
         root = newNode;
         height ++;
 
-        System.out.printf("Splitting root node...: new root node=%s\n", newNode);
+        System.out.printf("root node splitted...: new root node=%s\n", newNode);
 
     }
 
@@ -184,10 +184,13 @@ public class BTree<Key extends Comparable<Key>, Value>  {
 
         // internal node
         else {
+            System.out.println("internal node found. Checking children...");
             for (childrenIndex = 0; childrenIndex < node.numberOfChildren; childrenIndex++) {
                 if ((childrenIndex + 1 == node.numberOfChildren) || less(key, node.children[childrenIndex + 1].key)) {
                     Node u = insert(node.children[childrenIndex ++].next, key, val, height - 1);
                     if (u == null) return null;
+
+                    // extract middle key(first element of new node)
                     newEntry.key = u.children[0].key;
                     newEntry.next = u;
                     break;
@@ -199,8 +202,6 @@ public class BTree<Key extends Comparable<Key>, Value>  {
         for (int childrenTraverseIndex = node.numberOfChildren; childrenTraverseIndex > childrenIndex; childrenTraverseIndex --) {
             node.children[childrenTraverseIndex] = node.children[childrenTraverseIndex - 1];
         }
-        System.out.printf("Nodes moved...: after=%s\n", Arrays.toString(node.children));
-
         node.children[childrenIndex] = newEntry;
         node.numberOfChildren ++;
 
@@ -214,14 +215,21 @@ public class BTree<Key extends Comparable<Key>, Value>  {
     }
 
     // split node in half
-    private Node split(Node h) {
+    private Node split(Node existingNode) {
         System.out.println("Splitting a node...");
-        Node pivotNode = new Node(maxChildrenPerBTreeNode/2);
-        h.numberOfChildren = maxChildrenPerBTreeNode/2;
+        // heigher part of half
+        Node newNode = new Node(maxChildrenPerBTreeNode/2);
+        existingNode.numberOfChildren = maxChildrenPerBTreeNode/2;
         for (int leftNodeIndex = 0; leftNodeIndex < maxChildrenPerBTreeNode/2; leftNodeIndex ++)
-            pivotNode.children[leftNodeIndex] = h.children[maxChildrenPerBTreeNode/2 + leftNodeIndex]; 
-        System.out.printf("new node=%s, existing node=%s\n", pivotNode, h);
-        return pivotNode;    
+            newNode.children[leftNodeIndex] = existingNode.children[maxChildrenPerBTreeNode/2 + leftNodeIndex]; 
+        
+        // cleanup unnecessary references.
+        for (int leftOverEntryIndex = existingNode.numberOfChildren ; leftOverEntryIndex < existingNode.children.length; leftOverEntryIndex++) {
+            existingNode.children[leftOverEntryIndex] = null;
+        }
+
+        System.out.printf("new node=%s, existing node=%s\n", newNode, existingNode);
+        return newNode;    
     }
 
     /**
@@ -230,7 +238,15 @@ public class BTree<Key extends Comparable<Key>, Value>  {
      * @return a string representation of this B-tree.
      */
     public String toString() {
-        return toString(root, height, "") + "\n";
+        StringBuilder s = new StringBuilder();
+        s.append("root: ");
+        for (int childrenIndex = 0; childrenIndex < root.numberOfChildren ; childrenIndex ++) {
+            s.append(root.children[childrenIndex].key);
+            s.append(",");
+        }
+        s.deleteCharAt(s.length() - 1);
+        s.append('\n');
+        return s.append(toString(root, height, "") + "\n").toString();
     }
 
     private String toString(Node h, int ht, String indent) {
@@ -274,19 +290,36 @@ public class BTree<Key extends Comparable<Key>, Value>  {
         st.put(2, "128.112.136.11");
         st.put(3,    "128.112.128.15");
         st.put(9,         "130.132.143.21");
-        st.put(10,     "209.052.165.60");
-        st.put(11,        "17.112.152.32");
-        st.put(12,       "207.171.182.16");
-        st.put(4,         "66.135.192.87");
-        st.put(5,          "64.236.16.20");
         final PrintStream StdOut = System.out;
 
-        StdOut.println("cs.princeton.edu:  " + st.get(1));
-        StdOut.println("hardvardsucks.com: " + st.get(2));
-        StdOut.println("simpsons.com:      " + st.get(5));
-        StdOut.println("apple.com:         " + st.get(6));
+        StdOut.println("size:    " + st.size());
+        StdOut.println("height:  " + st.height());
+        StdOut.println(st);
         StdOut.println();
 
+        st.put(4,     "209.052.165.60");
+
+        StdOut.println("size:    " + st.size());
+        StdOut.println("height:  " + st.height());
+        StdOut.println(st);
+        StdOut.println();
+
+        st.put(5,     "209.052.165.60");
+        
+        StdOut.println("size:    " + st.size());
+        StdOut.println("height:  " + st.height());
+        StdOut.println(st);
+        StdOut.println();
+
+        st.put(6,     "209.052.165.60");
+        
+        StdOut.println("size:    " + st.size());
+        StdOut.println("height:  " + st.height());
+        StdOut.println(st);
+        StdOut.println();
+
+        st.put(7,     "209.052.165.60");
+        
         StdOut.println("size:    " + st.size());
         StdOut.println("height:  " + st.height());
         StdOut.println(st);
