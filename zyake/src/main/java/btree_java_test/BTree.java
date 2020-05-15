@@ -155,11 +155,15 @@ public class BTree<Key extends Comparable<Key>, Value>  {
         if (u == null) return;
 
         // need to split root
-        Node t = new Node(2);
-        t.children[0] = new Entry(root.children[0].key, null, root);
-        t.children[1] = new Entry(u.children[0].key, null, u);
-        root = t;
+        System.out.println("Splitting root node...");
+        Node newNode = new Node(2);
+        newNode.children[0] = new Entry(root.children[0].key, null, root);
+        newNode.children[1] = new Entry(u.children[0].key, null, u);
+        root = newNode;
         height ++;
+
+        System.out.printf("Splitting root node...: new root node=%s\n", newNode);
+
     }
 
     private Node insert(Node node, Key key, Value val, int height) {
@@ -211,11 +215,13 @@ public class BTree<Key extends Comparable<Key>, Value>  {
 
     // split node in half
     private Node split(Node h) {
-        Node t = new Node(maxChildrenPerBTreeNode/2);
+        System.out.println("Splitting a node...");
+        Node pivotNode = new Node(maxChildrenPerBTreeNode/2);
         h.numberOfChildren = maxChildrenPerBTreeNode/2;
-        for (int j = 0; j < maxChildrenPerBTreeNode/2; j ++)
-            t.children[j] = h.children[maxChildrenPerBTreeNode/2 + j]; 
-        return t;    
+        for (int leftNodeIndex = 0; leftNodeIndex < maxChildrenPerBTreeNode/2; leftNodeIndex ++)
+            pivotNode.children[leftNodeIndex] = h.children[maxChildrenPerBTreeNode/2 + leftNodeIndex]; 
+        System.out.printf("new node=%s, existing node=%s\n", pivotNode, h);
+        return pivotNode;    
     }
 
     /**
@@ -262,33 +268,23 @@ public class BTree<Key extends Comparable<Key>, Value>  {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        final BTree<String, String> st = new BTree<String, String>();
+        final BTree<Integer, String> st = new BTree<Integer, String>();
 
-        st.put("www.cs.princeton.edu", "128.112.136.12");
-        st.put("www.cs.princeton.edu", "128.112.136.11");
-        st.put("www.princeton.edu",    "128.112.128.15");
-        st.put("www.yale.edu",         "130.132.143.21");
-        st.put("www.simpsons.com",     "209.052.165.60");
-        st.put("www.apple.com",        "17.112.152.32");
-        st.put("www.amazon.com",       "207.171.182.16");
-        st.put("www.ebay.com",         "66.135.192.87");
-        st.put("www.cnn.com",          "64.236.16.20");
-        st.put("www.google.com",       "216.239.41.99");
-        st.put("www.nytimes.com",      "199.239.136.200");
-        st.put("www.microsoft.com",    "207.126.99.140");
-        st.put("www.dell.com",         "143.166.224.230");
-        st.put("www.slashdot.org",     "66.35.250.151");
-        st.put("www.espn.com",         "199.181.135.201");
-        st.put("www.weather.com",      "63.111.66.11");
-        st.put("www.yahoo.com",        "216.109.118.65");
-
+        st.put(1, "128.112.136.12");
+        st.put(2, "128.112.136.11");
+        st.put(3,    "128.112.128.15");
+        st.put(9,         "130.132.143.21");
+        st.put(10,     "209.052.165.60");
+        st.put(11,        "17.112.152.32");
+        st.put(12,       "207.171.182.16");
+        st.put(4,         "66.135.192.87");
+        st.put(5,          "64.236.16.20");
         final PrintStream StdOut = System.out;
-        StdOut.println("cs.princeton.edu:  " + st.get("www.cs.princeton.edu"));
-        StdOut.println("hardvardsucks.com: " + st.get("www.harvardsucks.com"));
-        StdOut.println("simpsons.com:      " + st.get("www.simpsons.com"));
-        StdOut.println("apple.com:         " + st.get("www.apple.com"));
-        StdOut.println("ebay.com:          " + st.get("www.ebay.com"));
-        StdOut.println("dell.com:          " + st.get("www.dell.com"));
+
+        StdOut.println("cs.princeton.edu:  " + st.get(1));
+        StdOut.println("hardvardsucks.com: " + st.get(2));
+        StdOut.println("simpsons.com:      " + st.get(5));
+        StdOut.println("apple.com:         " + st.get(6));
         StdOut.println();
 
         StdOut.println("size:    " + st.size());
