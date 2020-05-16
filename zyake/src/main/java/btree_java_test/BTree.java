@@ -3,6 +3,9 @@ package btree_java_test;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+// 1. Understandable variable names 
+// 2. Fine grain logging
+
 /**
  * The {@code BTree} class represents an ordered symbol table of generic
  * key-value pairs. It supports the <em>put</em>, <em>get</em>,
@@ -34,7 +37,7 @@ public class BTree<Key extends Comparable<Key>, Value>  {
 
     private Node root;       // root of the B-tree
     private int height;      // height of the B-tree
-    private int n;           // number of key-value pairs in the B-tree
+    private int numberOfKeyValuePair;           // number of key-value pairs in the B-tree
 
     // helper B-tree node data type
     private static final class Node {
@@ -42,8 +45,8 @@ public class BTree<Key extends Comparable<Key>, Value>  {
         private Entry[] children = new Entry[maxChildrenPerBTreeNode];   // the array of children
 
         // create a node with k children
-        private Node(int k) {
-            numberOfChildren = k;
+        private Node(int numberOfChildren) {
+            this.numberOfChildren = numberOfChildren;
         }
 
         @Override
@@ -90,7 +93,7 @@ public class BTree<Key extends Comparable<Key>, Value>  {
      * @return the number of key-value pairs in this symbol table
      */
     public int size() {
-        return n;
+        return numberOfKeyValuePair;
     }
 
     /**
@@ -101,7 +104,6 @@ public class BTree<Key extends Comparable<Key>, Value>  {
     public int height() {
         return height;
     }
-
 
     /**
      * Returns the value associated with the given key.
@@ -151,7 +153,7 @@ public class BTree<Key extends Comparable<Key>, Value>  {
 
         if (key == null) throw new IllegalArgumentException("argument key to put() is null");
         Node u = insert(root, key, val, height); 
-        n++;
+        numberOfKeyValuePair++;
         if (u == null) return;
 
         // need to split root
